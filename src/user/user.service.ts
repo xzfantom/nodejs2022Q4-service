@@ -8,6 +8,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { v4, validate } from 'uuid';
+import { warn } from 'console';
 
 const users: User[] = [];
 
@@ -25,11 +26,13 @@ export class UserService {
       version: 1,
     };
     users.push(user);
-    return user;
+    const { password, ...result } = user;
+    warn(result);
+    return result;
   }
 
   findAll() {
-    return users;
+    return users.map(({ password, ...result }) => result);
   }
 
   findOne(id: string) {
@@ -45,7 +48,11 @@ export class UserService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    if (!validate(id)) {
+    if (
+      !validate(id) ||
+      !updateUserDto.oldPassword ||
+      !updateUserDto.newPassword
+    ) {
       throw new BadRequestException();
     }
     const user = users.find((user) => user.id === id);
@@ -59,7 +66,8 @@ export class UserService {
     } else {
       throw new ForbiddenException();
     }
-    return user;
+    const { password, ...result } = user;
+    return result;
   }
 
   remove(id: string) {
@@ -70,6 +78,7 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    return users.filter((user) => user.id !== id);
+    const index = users.indexOf(user);
+    users.splice(index, 1);
   }
 }
