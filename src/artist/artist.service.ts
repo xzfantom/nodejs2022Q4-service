@@ -1,46 +1,28 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { v4 } from 'uuid';
-import { Artist } from './entities/artist.entity';
+import { DbService } from 'src/db/db.service';
 
-const artists: Artist[] = [];
 @Injectable()
 export class ArtistService {
+  constructor(private dbService: DbService) {}
   async create(createArtistDto: CreateArtistDto) {
-    const artist = {
-      id: v4(),
-      ...createArtistDto,
-    };
-    artists.push(artist);
-    return artist;
+    return await this.dbService.createArtist(createArtistDto);
   }
 
   async findAll() {
-    return artists;
+    return await this.dbService.findAllArtists();
   }
 
   async findOne(id: string) {
-    const artist = artists.find((artist) => artist.id === id);
-    if (!artist) {
-      throw new NotFoundException();
-    }
-
-    return artist;
+    return await this.dbService.findOneArtist(id);
   }
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = await this.findOne(id);
-    Object.assign(artist, updateArtistDto);
-    return artist;
+    return await this.dbService.updateArtist(id, updateArtistDto);
   }
 
   async remove(id: string) {
-    const artist = await this.findOne(id);
-
-    const index = artists.indexOf(artist);
-    artists.splice(index, 1);
-
-    return true;
+    await this.dbService.removeArtist(id);
   }
 }

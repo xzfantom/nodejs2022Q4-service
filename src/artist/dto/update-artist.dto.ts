@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateArtistDto } from './create-artist.dto';
 import * as Joi from 'joi';
 
 export class UpdateArtistDto {

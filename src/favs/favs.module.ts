@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { FavsController } from './favs.controller';
-import { TrackService } from '../track/track.service';
+import { DbModule } from 'src/db/db.module';
 
 @Module({
   controllers: [FavsController],
   providers: [FavsService],
-  imports: [TrackService],
+  imports: [DbModule],
 })
 export class FavsModule {}
