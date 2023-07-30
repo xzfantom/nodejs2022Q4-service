@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
+import { v4 } from 'uuid';
+import { Artist } from './entities/artist.entity';
 
+const artists: Artist[] = [];
 @Injectable()
 export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+  async create(createArtistDto: CreateArtistDto) {
+    const artist = {
+      id: v4(),
+      ...createArtistDto,
+    };
+    artists.push(artist);
+    return artist;
   }
 
-  findAll() {
-    return `This action returns all artist`;
+  async findAll() {
+    return artists;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  async findOne(id: string) {
+    const artist = artists.find((artist) => artist.id === id);
+    if (!artist) {
+      throw new NotFoundException();
+    }
+
+    return artist;
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    const artist = await this.findOne(id);
+    Object.assign(artist, updateArtistDto);
+    return artist;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} artist`;
+  async remove(id: string) {
+    const artist = await this.findOne(id);
+
+    const index = artists.indexOf(artist);
+    artists.splice(index, 1);
+
+    return true;
   }
 }

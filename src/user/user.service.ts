@@ -24,7 +24,6 @@ export class UserService {
     };
     users.push(user);
     const { password, ...result } = user;
-    warn(result);
     return result;
   }
 
@@ -42,6 +41,7 @@ export class UserService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
+    warn(updateUserDto);
     const user = users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException();
