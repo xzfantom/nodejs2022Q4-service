@@ -27,6 +27,9 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+To get OpenAPI in json format open http://localhost:4000/doc-json
+To get OpenAPI in yaml format open http://localhost:4000/doc/yaml
+
 You can change port by copying .env.example file to .env file and changing variable PORT to new value
 
 ## Testing

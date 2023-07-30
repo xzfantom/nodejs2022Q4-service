@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { log } from 'console';
+import { dump } from 'js-yaml';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +18,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('doc', app, document);
+  app.use('/doc/yaml', (req, res) => {
+    res.type('text/yaml');
+    res.send(dump(document));
+  });
 
   log(`Server running on http://localhost:${PORT}/`);
   log(`Swagger running on http://localhost:${PORT}/doc/`);
