@@ -7,7 +7,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { v4, validate } from 'uuid';
+import { v4 } from 'uuid';
 import { warn } from 'console';
 
 const users: User[] = [];
@@ -15,9 +15,6 @@ const users: User[] = [];
 @Injectable()
 export class UserService {
   create(createUserDto: CreateUserDto) {
-    if (!createUserDto.login || !createUserDto.password) {
-      throw new BadRequestException();
-    }
     const user = {
       id: v4(),
       ...createUserDto,
@@ -36,9 +33,6 @@ export class UserService {
   }
 
   findOne(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
     const user = users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException();
@@ -48,13 +42,6 @@ export class UserService {
   }
 
   update(id: string, updateUserDto: UpdateUserDto) {
-    if (
-      !validate(id) ||
-      !updateUserDto.oldPassword ||
-      !updateUserDto.newPassword
-    ) {
-      throw new BadRequestException();
-    }
     const user = users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException();
@@ -71,9 +58,6 @@ export class UserService {
   }
 
   remove(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
     const user = users.find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException();
