@@ -27,9 +27,6 @@ export class TrackService {
   }
 
   async findOne(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
     const track = tracks.find((track) => track.id === id);
     if (!track) {
       throw new NotFoundException();
@@ -39,9 +36,6 @@ export class TrackService {
   }
 
   async update(id: string, updateTrackDto: UpdateTrackDto) {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
     const track = tracks.find((track) => track.id === id);
     if (!track) {
       throw new NotFoundException();
@@ -51,13 +45,12 @@ export class TrackService {
   }
 
   async remove(id: string) {
-    if (!validate(id)) {
-      throw new BadRequestException();
-    }
     const user = tracks.find((track) => track.id === id);
     if (!user) {
       throw new NotFoundException();
     }
-    return tracks.filter((track) => track.id !== id);
+
+    const index = tracks.indexOf(user);
+    tracks.splice(index, 1);
   }
 }

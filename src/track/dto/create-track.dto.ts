@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import * as Joi from 'joi';
 
 export class CreateTrackDto {
   @ApiProperty()
@@ -13,3 +14,10 @@ export class CreateTrackDto {
   @ApiProperty()
   duration: number; // integer number
 }
+
+export const CreateTrackSchema = Joi.object({
+  name: Joi.string().required(),
+  artistId: Joi.string().allow(null),
+  albumId: Joi.string().allow(null),
+  duration: Joi.number().integer().required(),
+});
