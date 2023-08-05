@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { CreateUserDto, CreateUserSchema } from './dto/create-user.dto';
 import { UpdateUserDto, UpdateUserSchema } from './dto/update-user.dto';
 import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -26,7 +27,7 @@ export class UserController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(): Promise<Array<Omit<User, 'password'>>> {
     return this.userService.findAll();
   }
 
