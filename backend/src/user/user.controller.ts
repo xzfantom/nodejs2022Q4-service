@@ -9,6 +9,8 @@ import {
   Put,
   UsePipes,
   ParseUUIDPipe,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, CreateUserSchema } from './dto/create-user.dto';
@@ -27,22 +29,28 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<Array<Omit<User, 'password'>>> {
-    return this.userService.findAll();
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll(): Promise<Array<User>> {
+    const result = await this.userService.findAll();
+    return result.map((user) => new User(user));
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.userService.findOne(id);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+    const result = await this.userService.findOne(id);
+    return new User(result);
   }
 
   @Put(':id')
   @UsePipes(new JoiValidationPipe(UpdateUserSchema))
+  @UseInterceptors(ClassSerializerInterceptor)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return this.userService.update(id, updateUserDto);
+    const result = await this.userService.update(id, updateUserDto);
+    return new User(result);
   }
 
   @Delete(':id')

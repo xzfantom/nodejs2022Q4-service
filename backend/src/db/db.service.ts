@@ -1,5 +1,4 @@
 import {
-  ForbiddenException,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
@@ -12,15 +11,14 @@ import { CreateArtistDto } from 'src/artist/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/artist/dto/update-artist.dto';
 import { Artist } from 'src/artist/entities/artist.entity';
 import { Fav } from 'src/favs/entities/fav.entity';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTrackDto } from 'src/track/dto/create-track.dto';
 import { UpdateTrackDto } from 'src/track/dto/update-track.dto';
 import { Track } from 'src/track/entities/track.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UpdateUserDto } from 'src/user/dto/update-user.dto';
-import { User } from 'src/user/entities/user.entity';
 import { v4 } from 'uuid';
 
-const users: User[] = [];
 const tracks: Track[] = [];
 const artists: Artist[] = [];
 const albums: Album[] = [];
@@ -33,58 +31,26 @@ const favs: Fav = {
 
 @Injectable()
 export class DbService {
+  constructor(private prisma: PrismaService) {}
+
   createUser(createUserDto: CreateUserDto) {
-    const user = {
-      id: v4(),
-      ...createUserDto,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      version: 1,
-    };
-    users.push(user);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result;
+    return this.prisma.user.create({ data: createUserDto });
   }
 
   findAllUsers() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return users.map(({ password, ...result }) => result);
+    return this.prisma.user.findMany();
   }
 
   findOneUser(id: string) {
-    const user = users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-
-    return user;
+    return this.prisma.user.findUnique({ where: { id } });
   }
 
   updateUser(id: string, updateUserDto: UpdateUserDto) {
-    const user = users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-    if (user.password === updateUserDto.oldPassword) {
-      user.password = updateUserDto.newPassword;
-      user.updatedAt = Date.now();
-      user.version++;
-    } else {
-      throw new ForbiddenException();
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...result } = user;
-    return result;
+    return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
   removeUser(id: string) {
-    const user = users.find((user) => user.id === id);
-    if (!user) {
-      throw new NotFoundException();
-    }
-    const index = users.indexOf(user);
-    users.splice(index, 1);
+    return this.prisma.user.delete({ where: { id } });
   }
 
   // Tracks
