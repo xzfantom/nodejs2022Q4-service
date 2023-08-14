@@ -22,10 +22,13 @@ COPY . .
 # Generate prisma client
 RUN npx prisma generate
 
-RUN ["npx", "nest", "build"]
+RUN ["npm", "run", "build"]
 
 FROM node:18-alpine
 
-COPY --from=development /app/dist/ /app/
+WORKDIR /app
 
-CMD ["node", "/app/main.js"]
+COPY --from=development /app/node_modules ./node_modules
+COPY --from=development /app/dist/ ./
+
+CMD ["node", "server.js"]

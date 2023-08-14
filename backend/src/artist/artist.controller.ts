@@ -15,7 +15,7 @@ import {
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, CreateArtistSchema } from './dto/create-artist.dto';
 import { UpdateArtistDto, UpdateArtistSchema } from './dto/update-artist.dto';
-import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Artist } from './entities/artist.entity';
 
 @Controller('artist')

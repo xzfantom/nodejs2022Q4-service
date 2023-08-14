@@ -4,19 +4,18 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { CreateAlbumDto } from 'src/album/dto/create-album.dto';
-import { UpdateAlbumDto } from 'src/album/dto/update-album.dto';
-import { Album } from 'src/album/entities/album.entity';
-import { CreateArtistDto } from 'src/artist/dto/create-artist.dto';
-import { UpdateArtistDto } from 'src/artist/dto/update-artist.dto';
-import { Artist } from 'src/artist/entities/artist.entity';
-import { Fav } from 'src/favs/entities/fav.entity';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateTrackDto } from 'src/track/dto/create-track.dto';
-import { UpdateTrackDto } from 'src/track/dto/update-track.dto';
-import { Track } from 'src/track/entities/track.entity';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
-import { User } from 'src/user/entities/user.entity';
+import { CreateAlbumDto } from '../album/dto/create-album.dto';
+import { UpdateAlbumDto } from '../album/dto/update-album.dto';
+import { Album } from '../album/entities/album.entity';
+import { CreateArtistDto } from '../artist/dto/create-artist.dto';
+import { UpdateArtistDto } from '../artist/dto/update-artist.dto';
+import { Artist } from '../artist/entities/artist.entity';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateTrackDto } from '../track/dto/create-track.dto';
+import { UpdateTrackDto } from '../track/dto/update-track.dto';
+import { Track } from '../track/entities/track.entity';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class DbService {

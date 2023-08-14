@@ -15,7 +15,7 @@ import {
 import { TrackService } from './track.service';
 import { CreateTrackDto, CreateTrackSchema } from './dto/create-track.dto';
 import { UpdateTrackDto, UpdateTrackSchema } from './dto/update-track.dto';
-import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Track } from './entities/track.entity';
 
 @Controller('track')

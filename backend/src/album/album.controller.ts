@@ -15,7 +15,7 @@ import {
 import { AlbumService } from './album.service';
 import { CreateAlbumDto, CreateAlbumSchema } from './dto/create-album.dto';
 import { UpdateAlbumDto, UpdateAlbumSchema } from './dto/update-album.dto';
-import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Album } from './entities/album.entity';
 
 @Controller('album')

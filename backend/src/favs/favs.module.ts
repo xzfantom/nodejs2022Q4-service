@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { FavsController } from './favs.controller';
-import { DbModule } from 'src/db/db.module';
+import { DbModule } from '../db/db.module';
 
 @Module({
   controllers: [FavsController],
