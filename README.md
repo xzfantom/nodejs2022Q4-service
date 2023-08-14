@@ -30,7 +30,13 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 To get OpenAPI in json format open http://localhost:4000/doc-json
 To get OpenAPI in yaml format open http://localhost:4000/doc/yaml
 
-You can change port by copying .env.example file to .env file and changing variable PORT to new value
+You can change port by opening .env file and changing variable PORT to new value
+
+If you want to check production image run:
+
+```
+docker compose -f docker-compose.prod.yaml up
+```
 
 ## Testing
 
