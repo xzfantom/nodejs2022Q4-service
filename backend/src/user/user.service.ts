@@ -11,12 +11,12 @@ import { DbService } from 'src/db/db.service';
 @Injectable()
 export class UserService {
   constructor(private dbService: DbService) {}
-  create(createUserDto: CreateUserDto) {
-    return this.dbService.createUser(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    return await this.dbService.createUser(createUserDto);
   }
 
-  findAll() {
-    return this.dbService.findAllUsers();
+  async findAll() {
+    return await this.dbService.findAllUsers();
   }
 
   async findOne(id: string) {

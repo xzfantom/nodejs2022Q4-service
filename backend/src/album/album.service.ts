@@ -6,23 +6,23 @@ import { DbService } from 'src/db/db.service';
 @Injectable()
 export class AlbumService {
   constructor(private dbService: DbService) {}
-  create(createAlbumDto: CreateAlbumDto) {
-    return this.dbService.createAlbum(createAlbumDto);
+  async create(createAlbumDto: CreateAlbumDto) {
+    return await this.dbService.createAlbum(createAlbumDto);
   }
 
-  findAll() {
-    return this.dbService.findAllAlbums();
+  async findAll() {
+    return await this.dbService.findAllAlbums();
   }
 
-  findOne(id: string) {
-    return this.dbService.findOneAlbum(id);
+  async findOne(id: string) {
+    return await this.dbService.findOneAlbum(id);
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    return this.dbService.updateAlbum(id, updateAlbumDto);
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    return await this.dbService.updateAlbum(id, updateAlbumDto);
   }
 
-  remove(id: string) {
-    this.dbService.removeAlbum(id);
+  async remove(id: string) {
+    await this.dbService.removeAlbum(id);
   }
 }
