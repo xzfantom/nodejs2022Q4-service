@@ -10,7 +10,7 @@ ENV NODE_ENV development
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the container
-COPY package*.json .
+COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install dependencies
@@ -22,8 +22,10 @@ COPY . .
 # Generate prisma client
 RUN npx prisma generate
 
-EXPOSE 3000
+RUN ["npx", "nest", "build"]
 
-# Set the command to start the server using the $PORT environment variable
-CMD ["npm", "run", "start:migrate:dev"]
+FROM node:18-alpine
 
+COPY --from=development /app/dist/ /app/
+
+CMD ["node", "/app/main.js"]
