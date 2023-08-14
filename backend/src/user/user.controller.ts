@@ -24,8 +24,10 @@ export class UserController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateUserSchema))
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() createUserDto: CreateUserDto) {
+    const newUser = await this.userService.create(createUserDto);
+    return new User(newUser);
   }
 
   @Get()

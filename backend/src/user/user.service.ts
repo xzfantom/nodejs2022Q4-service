@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from 'src/db/db.service';
@@ -14,15 +19,27 @@ export class UserService {
     return this.dbService.findAllUsers();
   }
 
-  findOne(id: string) {
-    return this.dbService.findOneUser(id);
+  async findOne(id: string) {
+    return await this.dbService.findOneUser(id);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
-    return this.dbService.updateUser(id, updateUserDto);
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.dbService.findOneUser(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    if (user.password !== updateUserDto.oldPassword) {
+      throw new ForbiddenException();
+    }
+    return this.dbService.updateUser(id, {
+      ...user,
+      version: user.version + 1,
+      updatedAt: new Date(),
+      password: updateUserDto.newPassword,
+    });
   }
 
-  remove(id: string) {
-    this.dbService.removeUser(id);
+  async remove(id: string) {
+    console.log(await this.dbService.removeUser(id));
   }
 }

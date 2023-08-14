@@ -1,6 +1,8 @@
 # Use an official Node.js runtime as a parent image
 FROM node:18-alpine AS development
 
+RUN apk add --update --no-cache openssl1.1-compat
+
 # Set the NODE_ENV
 ENV NODE_ENV development
 
@@ -9,6 +11,7 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json .
+COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm ci
@@ -22,5 +25,5 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Set the command to start the server using the $PORT environment variable
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start:migrate:dev"]
 
