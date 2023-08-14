@@ -10,7 +10,8 @@ services:
     depends_on:
       - postgresql-service
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
     networks:
       net:
         ipv4_address: 172.32.1.1
