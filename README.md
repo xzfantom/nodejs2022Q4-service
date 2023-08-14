@@ -4,23 +4,23 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker + docker compose - [Download & Install Docker](https://www.docker.com/)
 
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/xzfantom/nodejs2022Q4-service
+git switch task2
 ```
 
-## Installing NPM modules
+## Preparation
 
-```
-npm install
-```
+Rename .env.example to .env
 
 ## Running application
 
 ```
-npm start
+docker compose up
 ```
 
 After starting the app on port (4000 as default) you can open
