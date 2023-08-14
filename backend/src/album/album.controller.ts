@@ -9,11 +9,14 @@ import {
   UsePipes,
   ParseUUIDPipe,
   HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto, CreateAlbumSchema } from './dto/create-album.dto';
 import { UpdateAlbumDto, UpdateAlbumSchema } from './dto/update-album.dto';
 import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { Album } from './entities/album.entity';
 
 @Controller('album')
 export class AlbumController {
@@ -21,27 +24,31 @@ export class AlbumController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateAlbumSchema))
-  create(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.albumService.create(createAlbumDto);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() createAlbumDto: CreateAlbumDto) {
+    return new Album(await this.albumService.create(createAlbumDto));
   }
 
   @Get()
-  findAll() {
-    return this.albumService.findAll();
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll() {
+    return (await this.albumService.findAll()).map((album) => new Album(album));
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.albumService.findOne(id);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return new Album(await this.albumService.findOne(id));
   }
 
   @Put(':id')
   @UsePipes(new JoiValidationPipe(UpdateAlbumSchema))
-  update(
+  @UseInterceptors(ClassSerializerInterceptor)
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
-    return this.albumService.update(id, updateAlbumDto);
+    return new Album(await this.albumService.update(id, updateAlbumDto));
   }
 
   @Delete(':id')

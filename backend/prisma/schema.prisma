@@ -34,6 +34,8 @@ model Artist {
 
   Album Album[]
   Track Track[]
+
+  isFav Boolean @default(false)
 }
 
 model Album {
@@ -46,6 +48,8 @@ model Album {
   artistId String? // refers to Artist
   artist   Artist? @relation(fields: [artistId], references: [id])
   Track    Track[]
+
+  isFav Boolean @default(false)
 }
 
 model Track {
@@ -60,6 +64,8 @@ model Track {
   album   Album?  @relation(fields: [albumId], references: [id])
 
   duration Int // integer number
+
+  isFav Boolean @default(false)
 }
 
 model Fav {

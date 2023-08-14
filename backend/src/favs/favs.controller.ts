@@ -6,6 +6,8 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 
@@ -14,6 +16,7 @@ export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
   @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
   findAll() {
     return this.favsService.findAll();
   }

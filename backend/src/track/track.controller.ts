@@ -9,11 +9,14 @@ import {
   UsePipes,
   Put,
   HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto, CreateTrackSchema } from './dto/create-track.dto';
 import { UpdateTrackDto, UpdateTrackSchema } from './dto/update-track.dto';
 import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { Track } from './entities/track.entity';
 
 @Controller('track')
 export class TrackController {
@@ -26,27 +29,32 @@ export class TrackController {
   }
 
   @Get()
-  findAll() {
-    return this.trackService.findAll();
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll() {
+    const result = await this.trackService.findAll();
+    return result.map((track) => new Track(track));
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.findOne(id);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const result = await this.trackService.findOne(id);
+    return new Track(result);
   }
 
   @Put(':id')
   @UsePipes(new JoiValidationPipe(UpdateTrackSchema))
-  update(
+  @UseInterceptors(ClassSerializerInterceptor)
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ) {
-    return this.trackService.update(id, updateTrackDto);
+    return new Track(await this.trackService.update(id, updateTrackDto));
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.trackService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    await this.trackService.remove(id);
   }
 }

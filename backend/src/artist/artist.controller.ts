@@ -9,11 +9,14 @@ import {
   ParseUUIDPipe,
   UsePipes,
   HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto, CreateArtistSchema } from './dto/create-artist.dto';
 import { UpdateArtistDto, UpdateArtistSchema } from './dto/update-artist.dto';
 import { JoiValidationPipe } from 'src/pipes/JoiValidationPipe';
+import { Artist } from './entities/artist.entity';
 
 @Controller('artist')
 export class ArtistController {
@@ -21,32 +24,38 @@ export class ArtistController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(CreateArtistSchema))
-  create(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.create(createArtistDto);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() createArtistDto: CreateArtistDto) {
+    return new Artist(await this.artistService.create(createArtistDto));
   }
 
   @Get()
-  findAll() {
-    return this.artistService.findAll();
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll() {
+    return (await this.artistService.findAll()).map(
+      (artist) => new Artist(artist),
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistService.findOne(id);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return new Artist(await this.artistService.findOne(id));
   }
 
   @Put(':id')
   @UsePipes(new JoiValidationPipe(UpdateArtistSchema))
-  update(
+  @UseInterceptors(ClassSerializerInterceptor)
+  async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
-    return this.artistService.update(id, updateArtistDto);
+    return new Artist(await this.artistService.update(id, updateArtistDto));
   }
 
   @Delete(':id')
   @HttpCode(204)
-  remove(@Param('id', ParseUUIDPipe) id: string) {
-    return this.artistService.remove(id);
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    await this.artistService.remove(id);
   }
 }

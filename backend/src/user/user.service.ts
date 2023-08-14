@@ -2,7 +2,6 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -40,6 +39,6 @@ export class UserService {
   }
 
   async remove(id: string) {
-    console.log(await this.dbService.removeUser(id));
+    await this.dbService.removeUser(id);
   }
 }
