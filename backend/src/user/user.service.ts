@@ -6,15 +6,17 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from '../db/db.service';
+import { MyLoggerService } from '../logger/mylogger.service';
 
 @Injectable()
 export class UserService {
-  constructor(private dbService: DbService) {}
+  constructor(private dbService: DbService, private logger: MyLoggerService) {}
   async create(createUserDto: CreateUserDto) {
     return await this.dbService.createUser(createUserDto);
   }
 
   async findAll() {
+    this.logger.log('findAll', 'UserService');
     return await this.dbService.findAllUsers();
   }
 

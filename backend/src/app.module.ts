@@ -8,6 +8,7 @@ import { AlbumModule } from './album/album.module';
 import { FavsModule } from './favs/favs.module';
 import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ConfigModule } from '@nestjs/config';
     FavsModule,
     DbModule,
     ConfigModule.forRoot(),
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
