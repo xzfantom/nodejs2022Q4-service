@@ -4,23 +4,23 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker + docker compose - [Download & Install Docker](https://www.docker.com/)
 
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/xzfantom/nodejs2022Q4-service
+git switch task2
 ```
 
-## Installing NPM modules
+## Preparation
 
-```
-npm install
-```
+Rename .env.example to .env
 
 ## Running application
 
 ```
-npm start
+docker compose up
 ```
 
 After starting the app on port (4000 as default) you can open
@@ -30,7 +30,13 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 To get OpenAPI in json format open http://localhost:4000/doc-json
 To get OpenAPI in yaml format open http://localhost:4000/doc/yaml
 
-You can change port by copying .env.example file to .env file and changing variable PORT to new value
+You can change port by opening .env file and changing variable PORT to new value
+
+If you want to check production image run:
+
+```
+docker compose -f docker-compose.prod.yaml up
+```
 
 ## Testing
 

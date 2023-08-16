@@ -1,0 +1,53 @@
+version: "3.8"
+
+services:
+  backend-service:
+    image: xzfantom/homelib-backend:latest
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      target: development
+    restart: always
+    container_name: backend
+    command: sh -c "cd /app/ && npm install && npm run start:migrate:dev"
+    volumes:
+      - ./backend:/app
+      - ./backend/node_modules:/app/node_modules
+    ports:
+      - "${PORT}:4000"
+    depends_on:
+      - postgresql-service
+    environment:
+      - NODE_ENV=development
+    networks:
+      net:
+        ipv4_address: 172.32.1.1
+
+  postgresql-service:
+    build:
+      context: db
+      dockerfile: Dockerfile
+    container_name: postgresql
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /data/postgres
+    restart: always
+    volumes:
+      - postgres_data:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      net:
+        ipv4_address: 172.32.1.2
+#
+networks:
+  net:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.32.0.0/16
+
+volumes:
+  postgres_data:
