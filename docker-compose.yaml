@@ -8,17 +8,22 @@ services:
       dockerfile: Dockerfile
       target: development
     restart: always
-    container_name: backend
+    container_name: homelib-backend
     command: sh -c "cd /app/ && npm install && npm run start:migrate:dev"
     volumes:
       - ./backend:/app
       - ./backend/node_modules:/app/node_modules
     ports:
-      - "${PORT}:4000"
+      - "${PORT}:${PORT}"
     depends_on:
       - postgresql-service
     environment:
       - NODE_ENV=development
+      - PORT=${PORT}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - LOG_TO_FILE=${LOG_TO_FILE}
+      - LOG_TO_CONSOLE=${LOG_TO_CONSOLE}
+      - LOG_FILE_LIMIT=${LOG_FILE_LIMIT}
     networks:
       net:
         ipv4_address: 172.32.1.1

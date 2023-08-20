@@ -9,6 +9,7 @@ import { FavsModule } from './favs/favs.module';
 import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from './logger/logger.module';
+import { RequestLoggerMiddleware } from './request-logger.middleware';
 
 @Module({
   imports: [
@@ -24,4 +25,8 @@ import { LoggerModule } from './logger/logger.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}
