@@ -18,7 +18,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const payload = { sub: user.id, username: user.login };
+    const payload = { userId: user.id, login: user.login };
     return {
       accessToken: await this.jwtService.signAsync(payload),
       refreshToken: await this.jwtService.signAsync(payload, {
@@ -42,15 +42,15 @@ export class AuthService {
         throw new UnauthorizedException();
       });
 
-    const user = await this.userService.findOne(payload.sub);
+    const user = await this.userService.findOne(payload.userId);
     if (!user) {
       throw new UnauthorizedException();
     }
 
     return {
       accessToken: await this.jwtService.signAsync({
-        sub: user.id,
-        username: user.login,
+        userId: user.id,
+        login: user.login,
       }),
     };
   }

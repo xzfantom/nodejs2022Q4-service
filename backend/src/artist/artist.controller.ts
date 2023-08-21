@@ -17,7 +17,9 @@ import { CreateArtistDto, CreateArtistSchema } from './dto/create-artist.dto';
 import { UpdateArtistDto, UpdateArtistSchema } from './dto/update-artist.dto';
 import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Artist } from './entities/artist.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

@@ -10,7 +10,9 @@ import {
   ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('favs')
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}

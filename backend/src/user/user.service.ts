@@ -7,19 +7,20 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from '../db/db.service';
 import { MyLoggerService } from '../logger/mylogger.service';
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  private cryptSalt;
+  private cryptSalt: number;
 
   constructor(
     private dbService: DbService,
     private logger: MyLoggerService,
     private configService: ConfigService,
   ) {
-    this.cryptSalt = this.configService.get('CRYPT_SALT');
+    const cryptSalt = Number(this.configService.get<number>('CRYPT_SALT'));
+    this.cryptSalt = cryptSalt;
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -27,10 +28,13 @@ export class UserService {
       createUserDto.password,
       this.cryptSalt,
     );
-    return await this.dbService.createUser({
+
+    const user = {
       ...createUserDto,
       password: hashedPassword,
-    });
+    };
+
+    return await this.dbService.createUser(user);
   }
 
   async findAll() {
@@ -43,7 +47,13 @@ export class UserService {
   }
 
   async findOneByLogin(login: string, password: string) {
-    return await this.dbService.findOneUserByLogin(login);
+    const user = await this.dbService.findOneUserByLogin(login);
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return user;
+    }
+
+    throw new ForbiddenException();
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -51,14 +61,25 @@ export class UserService {
     if (!user) {
       throw new NotFoundException();
     }
-    if (user.password !== updateUserDto.oldPassword) {
+
+    const match = await bcrypt.compare(
+      updateUserDto.oldPassword,
+      user.password,
+    );
+    if (!match) {
       throw new ForbiddenException();
     }
+
+    const password = await bcrypt.hash(
+      updateUserDto.newPassword,
+      this.cryptSalt,
+    );
+
     return this.dbService.updateUser(id, {
       ...user,
       version: user.version + 1,
       updatedAt: new Date(),
-      password: updateUserDto.newPassword,
+      password,
     });
   }
 

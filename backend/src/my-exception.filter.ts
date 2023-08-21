@@ -18,17 +18,17 @@ export class MyExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
-
     this.logger.error(
       exception.message,
       'MyExceptionFilter',
       request,
       response,
     );
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      message: exception.message,
+    });
   }
 }

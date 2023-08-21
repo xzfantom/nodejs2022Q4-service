@@ -35,7 +35,7 @@ async function bootstrap() {
     loggerService.error(err.message, 'uncaughtException');
   });
 
-  process.on('unhandledRejection', (reason, promise) => {
+  process.on('unhandledRejection', (reason) => {
     loggerService.error(reason, 'unhandledRejection');
   });
 
@@ -45,6 +45,7 @@ async function bootstrap() {
     .setTitle('Library API')
     .setDescription('A Library API with CRUD functionality')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

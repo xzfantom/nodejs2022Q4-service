@@ -17,7 +17,9 @@ import { CreateAlbumDto, CreateAlbumSchema } from './dto/create-album.dto';
 import { UpdateAlbumDto, UpdateAlbumSchema } from './dto/update-album.dto';
 import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Album } from './entities/album.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}

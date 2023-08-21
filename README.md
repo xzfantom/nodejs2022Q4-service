@@ -17,6 +17,11 @@ git switch task2
 
 Rename .env.example to .env
 
+To turn on logging to file or console - set LOG_TO_FILE and LOG_TO_CONSOLE to true.
+Set up maximum size of file log with LOG_FILE_LIMIT in Kb
+Set LOG_LEVEL to one of next values: error, warn, log, debug, verbose. Error level logs only errors,
+verbose level logs all levels.
+
 ## Running application
 
 ```
@@ -41,18 +46,6 @@ docker compose -f docker-compose.prod.yaml up
 ## Testing
 
 After application running open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
 
 To run all test with authorization
 

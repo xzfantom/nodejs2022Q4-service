@@ -17,7 +17,9 @@ import { CreateTrackDto, CreateTrackSchema } from './dto/create-track.dto';
 import { UpdateTrackDto, UpdateTrackSchema } from './dto/update-track.dto';
 import { JoiValidationPipe } from '../pipes/JoiValidationPipe';
 import { Track } from './entities/track.entity';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
