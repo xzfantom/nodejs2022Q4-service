@@ -42,6 +42,24 @@ export class DbService {
     return user;
   }
 
+  async findOneUserByLogin(login: string) {
+    try {
+      const user = await this.prisma.user.findFirstOrThrow({
+        where: { login },
+      });
+      return user;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException();
+      }
+
+      throw error;
+    }
+  }
+
   async updateUser(id: string, updateUserDto: User) {
     return await this.prisma.user.update({
       where: { id },

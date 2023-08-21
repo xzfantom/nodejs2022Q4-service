@@ -7,12 +7,30 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DbService } from '../db/db.service';
 import { MyLoggerService } from '../logger/mylogger.service';
+import bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  constructor(private dbService: DbService, private logger: MyLoggerService) {}
+  private cryptSalt;
+
+  constructor(
+    private dbService: DbService,
+    private logger: MyLoggerService,
+    private configService: ConfigService,
+  ) {
+    this.cryptSalt = this.configService.get('CRYPT_SALT');
+  }
+
   async create(createUserDto: CreateUserDto) {
-    return await this.dbService.createUser(createUserDto);
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      this.cryptSalt,
+    );
+    return await this.dbService.createUser({
+      ...createUserDto,
+      password: hashedPassword,
+    });
   }
 
   async findAll() {
@@ -22,6 +40,10 @@ export class UserService {
 
   async findOne(id: string) {
     return await this.dbService.findOneUser(id);
+  }
+
+  async findOneByLogin(login: string, password: string) {
+    return await this.dbService.findOneUserByLogin(login);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

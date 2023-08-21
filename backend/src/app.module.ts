@@ -10,6 +10,7 @@ import { DbModule } from './db/db.module';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from './logger/logger.module';
 import { RequestLoggerMiddleware } from './request-logger.middleware';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RequestLoggerMiddleware } from './request-logger.middleware';
     DbModule,
     ConfigModule.forRoot(),
     LoggerModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
